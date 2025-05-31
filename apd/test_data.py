@@ -1,30 +1,33 @@
 import pandas as pd
 
-# Путь к файлу (измени при необходимости)
 CSV_PATH = "RuATD/human_baseline.csv"
-
+CSV_TEST_PATH = "RuATD/test.csv"
+CSV_TRAIN_PATH = "RuATD/train.csv"
+CSV_VAL_PATH = "RuATD/val.csv"
+CSV = "RuATD/sample_submit_multiple.csv"
 def main():
-    # Загружаем данные
-    df = pd.read_csv(CSV_PATH)
+    # загружаем данные
+    df = pd.read_csv(CSV)
 
-    # Проверим названия колонок
+    # названия колонок
     print(f"[INFO] Столбцы в датасете: {df.columns.tolist()}")
 
-    # Приводим названия к стандартному виду (если нужно)
+    # названия к стандартному виду
     df = df.rename(columns={col: col.strip().lower() for col in df.columns})
+    print(f"\n[СТАТИСТИКА ДАТАСЕТА]")
+    print(f"Всего данных: {len(df)}")
 
-    # Предположим, что нужная колонка — majority_vote
-    if 'majority_vote' not in df.columns:
-        print("[ERROR] Не найден столбец 'majority_vote'")
+    if 'class' not in df.columns:
+        print("[ERROR] Не найден столбец 'class'")
         return
 
     total = len(df)
-    counts = df['majority_vote'].value_counts()
+    counts = df['class'].value_counts()
 
     print(f"\n[СТАТИСТИКА ДАТАСЕТА]")
     print(f"Всего данных: {total}")
-    print(f"Класс 'Human' (H): {counts.get('H', 0)}")
-    print(f"Класс 'AI' (M): {counts.get('M', 0)}")
+    print(f"Класс 'Human' (H): {counts.get('Human', 0)}")
+    print(f"Класс 'AI' (M): {total - counts.get('Human', 0)}")
 
 if __name__ == "__main__":
     main()
